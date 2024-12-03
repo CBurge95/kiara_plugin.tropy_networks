@@ -51,7 +51,7 @@ class CreateNetworkDataModule(CreateFromModule):
     _module_type_name = "assemble.network_graph.from.file"
     _config_cls = CreateNetworkDataModuleConfig
 
-    def assemble__network_graph__from__file(self, source_value: Value) -> Any:
+    def create__network_graph__from__file(self, source_value: Value) -> Any:
         """Create a table from a file, trying to auto-determine the format of said file.
 
         Supported file formats (at the moment):
