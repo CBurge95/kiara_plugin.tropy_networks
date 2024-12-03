@@ -48,7 +48,7 @@ class CreateNetworkDataModuleConfig(CreateFromModuleConfig):
 
 class CreateNetworkDataModule(CreateFromModule):
 
-    _module_type_name = "tropy.create.network_graph"
+    _module_type_name = "assemble.network_graph.from.file"
     _config_cls = CreateNetworkDataModuleConfig
 
     def create__network_graph__from__file(self, source_value: Value) -> Any:

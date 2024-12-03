@@ -17,7 +17,7 @@ class CutPointsList(KiaraModule):
     Uses networkx.articulation_points()
     https://networkx.org/documentation/stable/reference/algorithms/generated/networkx.algorithms.components.articulation_points.html"""
 
-    _module_type_name = "tropy.create.cut_point_list"
+    _module_type_name = "create.cut_point_list"
 
     def create_inputs_schema(self):
         return {

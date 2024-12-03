@@ -21,7 +21,7 @@ class Degree_Ranking(KiaraModule):
     Uses networkx degree.
     https://networkx.org/documentation/stable/reference/generated/networkx.classes.function.degree.html"""
 
-    _module_type_name = "tropy.calculate.degree_score"
+    _module_type_name = "calculate.degree_score"
 
     def create_inputs_schema(self):
         return {
@@ -80,7 +80,7 @@ class Betweenness_Ranking(KiaraModule):
     Uses networkx.betweenness_centrality()
     https://networkx.org/documentation/stable/reference/algorithms/generated/networkx.algorithms.centrality.betweenness_centrality.html#networkx.algorithms.centrality.betweenness_centrality"""
 
-    _module_type_name = "tropy.calculate.betweenness_score"
+    _module_type_name = "calculate.betweenness_score"
 
     def create_inputs_schema(self):
         return {
@@ -131,7 +131,7 @@ class Betweenness_Ranking(KiaraModule):
             G,
             source_column_name=network_data.source_column_name,
             target_column_name=network_data.target_column_name,
-            node_id_column_name=network_data.node_id_column_name,)
+            node_id_column_name=network_data.node_id_column_name)
 
         outputs.set_values(centrality_network=attribute_network)
 
@@ -143,7 +143,7 @@ class Eigenvector_Ranking(KiaraModule):
     Uses networkx.eigenvector_centrality()
     https://networkx.org/documentation/stable/reference/algorithms/generated/networkx.algorithms.centrality.eigenvector_centrality.html#networkx.algorithms.centrality.eigenvector_centrality"""
 
-    _module_type_name = "tropy.calculate.eigenvector_score"
+    _module_type_name = "calculate.eigenvector_score"
 
     def create_inputs_schema(self):
         return {
@@ -212,7 +212,7 @@ class Closeness_Ranking(KiaraModule):
     Uses networkx.closeness_centrality()
     https://networkx.org/documentation/stable/reference/algorithms/generated/networkx.algorithms.centrality.closeness_centrality.html#networkx.algorithms.centrality.closeness_centrality"""
 
-    _module_type_name = "tropy.calculate.closeness_score"
+    _module_type_name = "calculate.closeness_score"
 
     def create_inputs_schema(self):
         return {
