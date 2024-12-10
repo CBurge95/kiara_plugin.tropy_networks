@@ -66,5 +66,11 @@ class Preview_Network_Info(KiaraModule):
             + 'Number of Isolates: ' + str(nx.number_of_isolates(UNDIRECTED)) + '\n \n'
             + 'Number of Components: ' + str(nx.number_connected_components(UNDIRECTED))
             )
+        
+        if DIRECTED.number_of_edges() > UNDIRECTED.number_of_edges():
+            info = (info + '\n \n You have reciprocal edges')
+
+        if DIRECTED_MULTI.number_of_edges() > DIRECTED.number_of_edges():
+            info = (info + '\n \n You have parallel edges')
 
         outputs.set_values(preview=info)
