@@ -58,12 +58,16 @@ class Preview_Network_Info(KiaraModule):
         from kiara_plugin.tropy.models import NetworkGraph
 
         edges = inputs.get_value_obj("edges")
+        source_column = inputs.get_value_obj("source_column")
+        target_column = inputs.get_value_obj("target_column")
         graph_types = ALLOWED_GRAPH_TYPE_STRINGS
 
         def test_graph(graph):
             kiara_graph = NetworkGraph.create_from_tables(
                 graph_type=graph,
                 edges_table=edges,
+                source_column_name=source_column,
+                target_column_name=target_column
                 )
             G = kiara_graph.as_networkx_graph()
             return G
