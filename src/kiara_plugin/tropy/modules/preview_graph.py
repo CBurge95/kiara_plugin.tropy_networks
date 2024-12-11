@@ -1,12 +1,30 @@
 # -*- coding: utf-8 -*-
-from operator import itemgetter
+from typing import TYPE_CHECKING, Any, Mapping, Union
 
-from kiara.api import KiaraModule
-from kiara.models.values.value import ValueMap
+from pydantic import Field
+
+import collections
+import pyarrow as pa
+
+from kiara.exceptions import KiaraProcessingException
+from kiara.models.values.value import Value, ValueMap
+from kiara.modules import KiaraModule, ValueMapSchema
+from kiara.modules.included_core_modules.create_from import (
+    CreateFromModule,
+    CreateFromModuleConfig,
+)
 from kiara_plugin.tropy.defaults import (
     DEFAULT_SOURCE_COLUMN_NAME,
-    DEFAULT_TARGET_COLUMN_NAME
+    DEFAULT_TARGET_COLUMN_NAME,
+
 )
+from kiara_plugin.tropy.models import NetworkGraph
+
+if TYPE_CHECKING:
+    from kiara.models.filesystem import (
+        KiaraFile,
+    )
+    from kiara_plugin.tabular.models import KiaraTable
 
 KIARA_METADATA = {
     "authors": [
