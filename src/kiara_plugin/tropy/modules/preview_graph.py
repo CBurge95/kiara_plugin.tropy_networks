@@ -3,7 +3,11 @@ from operator import itemgetter
 
 from kiara.api import KiaraModule
 from kiara.models.values.value import ValueMap
-from kiara_plugin.tropy.defaults import ALLOWED_GRAPH_TYPE_STRINGS
+from kiara_plugin.tropy.defaults import (
+    ALLOWED_GRAPH_TYPE_STRINGS,
+    DEFAULT_SOURCE_COLUMN_NAME,
+    DEFAULT_TARGET_COLUMN_NAME
+)
 
 KIARA_METADATA = {
     "authors": [
@@ -26,6 +30,18 @@ class Preview_Network_Info(KiaraModule):
                 "doc": "A table that contains the edges data.",
                 "optional": False,
             },
+            "source_column": {
+                "type": "string",
+                "doc": "The name of the source column name in the edges table.",
+                "optional": False,
+                "default": DEFAULT_SOURCE_COLUMN_NAME,
+            },
+            "target_column": {
+                "type": "string",
+                "doc": "The name of the target column name in the edges table.",
+                "optional": False,
+                "default": DEFAULT_TARGET_COLUMN_NAME,
+            }
         }
 
     def create_outputs_schema(self):
