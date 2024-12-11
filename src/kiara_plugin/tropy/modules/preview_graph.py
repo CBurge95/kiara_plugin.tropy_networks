@@ -16,7 +16,7 @@ from kiara.modules.included_core_modules.create_from import (
 from kiara_plugin.tropy.defaults import (
     DEFAULT_SOURCE_COLUMN_NAME,
     DEFAULT_TARGET_COLUMN_NAME,
-
+    GraphType
 )
 from kiara_plugin.tropy.models import NetworkGraph
 
@@ -79,7 +79,7 @@ class Preview_Network_Info(KiaraModule):
         target_column = inputs.get_value_data("target_column")
     
         UNDIRECTED = NetworkGraph.create_from_tables(
-                graph_type="undirected",
+                graph_type=GraphType("undirected"),
                 edges_table=edges,
                 source_column_name=source_column,
                 target_column_name=target_column
@@ -87,7 +87,7 @@ class Preview_Network_Info(KiaraModule):
         UNDIRECTED = kiara_graph.as_networkx_graph()
 
         DIRECTED = NetworkGraph.create_from_tables(
-                graph_type="directed",
+                graph_type=GraphType("directed"),
                 edges_table=edges,
                 source_column_name=source_column,
                 target_column_name=target_column
@@ -95,7 +95,7 @@ class Preview_Network_Info(KiaraModule):
         DIRECTED = kiara_graph.as_networkx_graph()
 
         UNDIRECTED_MULTI = NetworkGraph.create_from_tables(
-                graph_type="undirected_multi",
+                graph_type=GraphType("undirected_multi"),
                 edges_table=edges,
                 source_column_name=source_column,
                 target_column_name=target_column
@@ -103,7 +103,7 @@ class Preview_Network_Info(KiaraModule):
         UNDIRECTED_MULTI = kiara_graph.as_networkx_graph()
 
         DIRECTED_MULTI = NetworkGraph.create_from_tables(
-                graph_type="directed_multi",
+                graph_type=GraphType("directed_multi"),
                 edges_table=edges,
                 source_column_name=source_column,
                 target_column_name=target_column
