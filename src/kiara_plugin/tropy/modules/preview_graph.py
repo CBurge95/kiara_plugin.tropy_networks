@@ -84,7 +84,7 @@ class Preview_Network_Info(KiaraModule):
                 source_column_name=source_column,
                 target_column_name=target_column
                 )
-        UNDIRECTED = kiara_graph.as_networkx_graph()
+        UNDIRECTED = UNDIRECTED.as_networkx_graph()
 
         DIRECTED = NetworkGraph.create_from_tables(
                 graph_type=GraphType("directed"),
@@ -92,7 +92,7 @@ class Preview_Network_Info(KiaraModule):
                 source_column_name=source_column,
                 target_column_name=target_column
                 )
-        DIRECTED = kiara_graph.as_networkx_graph()
+        DIRECTED = DIRECTED.as_networkx_graph()
 
         UNDIRECTED_MULTI = NetworkGraph.create_from_tables(
                 graph_type=GraphType("undirected_multi"),
@@ -100,7 +100,7 @@ class Preview_Network_Info(KiaraModule):
                 source_column_name=source_column,
                 target_column_name=target_column
                 )
-        UNDIRECTED_MULTI = kiara_graph.as_networkx_graph()
+        UNDIRECTED_MULTI = UNDIRECTED_MULTI.as_networkx_graph()
 
         DIRECTED_MULTI = NetworkGraph.create_from_tables(
                 graph_type=GraphType("directed_multi"),
@@ -108,7 +108,7 @@ class Preview_Network_Info(KiaraModule):
                 source_column_name=source_column,
                 target_column_name=target_column
                 )
-        DIRECTED_MULTI = kiara_graph.as_networkx_graph()
+        DIRECTED_MULTI = DIRECTED_MULTI.as_networkx_graph()
 
         info = (
             'Number of Nodes: ' + str(UNDIRECTED.number_of_nodes()) + '\n \n' 
