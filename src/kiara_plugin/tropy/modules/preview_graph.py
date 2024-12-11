@@ -4,7 +4,6 @@ from operator import itemgetter
 from kiara.api import KiaraModule
 from kiara.models.values.value import ValueMap
 from kiara_plugin.tropy.defaults import (
-    ALLOWED_GRAPH_TYPE_STRINGS,
     DEFAULT_SOURCE_COLUMN_NAME,
     DEFAULT_TARGET_COLUMN_NAME
 )
@@ -60,20 +59,38 @@ class Preview_Network_Info(KiaraModule):
         edges = inputs.get_value_obj("edges")
         source_column = inputs.get_value_data("source_column")
         target_column = inputs.get_value_data("target_column")
-        graph_types = ALLOWED_GRAPH_TYPE_STRINGS
-
-        def test_graph(graph):
-            kiara_graph = NetworkGraph.create_from_tables(
-                graph_type=graph,
+    
+        UNDIRECTED = NetworkGraph.create_from_tables(
+                graph_type="undirected",
                 edges_table=edges,
                 source_column_name=source_column,
                 target_column_name=target_column
                 )
-            G = kiara_graph.as_networkx_graph()
-            return G
-        
-        for item in graph_types:
-            globals()[item] = test_graph(item)
+        UNDIRECTED = kiara_graph.as_networkx_graph()
+
+        DIRECTED = NetworkGraph.create_from_tables(
+                graph_type="directed",
+                edges_table=edges,
+                source_column_name=source_column,
+                target_column_name=target_column
+                )
+        DIRECTED = kiara_graph.as_networkx_graph()
+
+        UNDIRECTED_MULTI = NetworkGraph.create_from_tables(
+                graph_type="undirected_multi",
+                edges_table=edges,
+                source_column_name=source_column,
+                target_column_name=target_column
+                )
+        UNDIRECTED_MULTI = kiara_graph.as_networkx_graph()
+
+        DIRECTED_MULTI = NetworkGraph.create_from_tables(
+                graph_type="directed_multi",
+                edges_table=edges,
+                source_column_name=source_column,
+                target_column_name=target_column
+                )
+        DIRECTED_MULTI = kiara_graph.as_networkx_graph()
 
         info = (
             'Number of Nodes: ' + str(UNDIRECTED.number_of_nodes()) + '\n \n' 
