@@ -50,6 +50,7 @@ class CutPointsList(KiaraModule):
         network_data: NetworkGraph = edges.data
 
         G = network_data.as_networkx_graph()
+        G = G.to_undirected()
 
         # TODO: I'm not sure what type the articulation points method returns, for my example
         # it seems to be some sort of numpy integer. So there might have to be a conversion
