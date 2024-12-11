@@ -123,9 +123,9 @@ class Preview_Network_Info(KiaraModule):
             )
         
         if DIRECTED.number_of_edges() > UNDIRECTED.number_of_edges():
-            info = (info + '\n \nYou have more edges in a directed graph than in an undirected graph. \nThis means you have reciprocal edges between at least one pair of nodes. If this doesn\'t sound correct for your datatype, please recheck your data.')
+            info = (info + '\n \nYou have more edges in a directed graph than in an undirected graph. \nThis means you have reciprocal edges between at least one pair of nodes. \nIf this doesn\'t sound correct for your datatype, please recheck your data.')
 
         if DIRECTED_MULTI.number_of_edges() > DIRECTED.number_of_edges():
-            info = (info + '\n \nYou have more edges in a multi graph than in an directed or undirected graph. \nThis means you have parallel edges between at least one pair of nodes. For more options on how to handle parallel edges, see the \'assemble.network_graph\' module. If this doesn\'t sound correct for your datatype, please recheck your data.')
+            info = (info + '\n \nYou have more edges in a multi graph than in an directed or undirected graph. \nThis means you have parallel edges between at least one pair of nodes. For more options on how to handle parallel edges, see the \'assemble.network_graph\' module. \nIf this doesn\'t sound correct for your datatype, please recheck your data.')
 
         outputs.set_values(preview=info)
