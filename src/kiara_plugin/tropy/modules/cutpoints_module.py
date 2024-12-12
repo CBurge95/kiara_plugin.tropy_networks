@@ -29,7 +29,7 @@ class CutPointsList(KiaraModule):
 
     def create_outputs_schema(self):
         return {
-            "network_result": {
+            "cutpoints": {
                 "type": "list",
                 "doc": "A list of all nodes that are cut-points.",
             },
@@ -50,15 +50,15 @@ class CutPointsList(KiaraModule):
         network_data: NetworkGraph = edges.data
 
         G = network_data.as_networkx_graph()
-        G = G.to_undirected()
+        Gund = G.to_undirected()
 
         # TODO: I'm not sure what type the articulation points method returns, for my example
         # it seems to be some sort of numpy integer. So there might have to be a conversion
         # to 'normal' integers here?
-        cutpoints = list(nx.articulation_points(G))
+        cutpoints = list(nx.articulation_points(Gund))
 
         cut_dict = {}
-        for node in G:
+        for node in Gund:
             if node in cutpoints:
                 cut_dict[node] = "Yes"
             else:
@@ -72,4 +72,4 @@ class CutPointsList(KiaraModule):
             target_column_name=network_data.target_column_name,
             node_id_column_name=network_data.node_id_column_name)
 
-        outputs.set_values(network_result=cutpoints, cut_network=attribute_network)
+        outputs.set_values(cutpoints=cutpoints, cut_network=attribute_network)
