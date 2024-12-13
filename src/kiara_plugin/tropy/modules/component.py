@@ -43,7 +43,7 @@ class CutPointsList(KiaraModule):
         network_data: NetworkGraph = edges.data
 
         G = network_data.as_networkx_graph()
-        Gcc = sorted(nx.connected_components(G), key=len, reverse=True)
+        Gcc = sorted(nx.connected_components(G.to_undirected()), key=len, reverse=True)
         largest = G.subgraph[Gcc[0]]
         if len(Gcc) == 1:
             raise KiaraProcessingException(
