@@ -43,9 +43,8 @@ class CutPointsList(KiaraModule):
         network_data: NetworkGraph = edges.data
 
         G = network_data.as_networkx_graph()
-        Gund = G.to_undirected()
-        Gcc = sorted(nx.connected_components(Gund), key=len, reverse=True)
-        largest = G.subgraph[Gcc[0]]
+        Gcc = sorted(nx.connected_components(G.to_undirected()), key=len, reverse=True)
+        largest = G.subgraph(Gcc[0])
         if len(Gcc) == 1:
             raise KiaraProcessingException(
                     f"Graph only contains one component. Please use original network graph object as the largest component."
