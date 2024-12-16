@@ -42,6 +42,14 @@ class Export_Networks(KiaraModule):
                 "doc": "Name for the new file."
             }
         }
+    
+    def create_outputs_schema(self):
+        return {
+            "information": {
+                "type": "string",
+                "doc": "path for new file"
+            }  
+        }
 
     def process(self, inputs: ValueMap, outputs: ValueMap):
 
@@ -75,3 +83,5 @@ class Export_Networks(KiaraModule):
 
         if file_type == "network_text":
             nx.write_network_text(G, str(name + '.txt'))
+
+        outputs.set_value("information", "information")
