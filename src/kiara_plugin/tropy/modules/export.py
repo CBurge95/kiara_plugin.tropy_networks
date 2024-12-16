@@ -59,8 +59,6 @@ class Export_Networks(KiaraModule):
         file_type = inputs.get_value_data('file_type')
         name = inputs.get_value_data('file_name')
 
-        name = str(name)
-
         network_data: NetworkGraph = edges.data
 
         G = network_data.as_networkx_graph()
@@ -69,7 +67,7 @@ class Export_Networks(KiaraModule):
             nx.write_graphml(G, str(name + '.graphml'))
 
         if file_type == "gml":
-            nx.write_gml(G, str(name + '.gml'))
+            nx.write_gml(G, 'graph.gml')
 
         if file_type == "gexf":
             nx.write_gexf(G, str(name + '.gexf'))
