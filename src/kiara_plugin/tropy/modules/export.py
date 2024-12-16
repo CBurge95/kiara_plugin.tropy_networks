@@ -31,7 +31,8 @@ class Export_Networks(KiaraModule):
         return {
             "network_graph": {
                 "type": "network_graph",
-                "doc": "The network graph to be exported."},
+                "doc": "The network graph to be exported."
+                },
             "file_type": {
                 "type": "string",
                 "type_config": {"allowed_strings": ALLOWED_EXPORT_TYPES_STRINGS},
@@ -40,6 +41,11 @@ class Export_Networks(KiaraModule):
             "file_name": {
                 "type": "string",
                 "doc": "Name for the new file."
+            },
+            "file_path": {
+                "type": "string",
+                "doc" : "File path for the new file.",
+                "optional": True
             }
         }
     
@@ -58,30 +64,38 @@ class Export_Networks(KiaraModule):
         edges = inputs.get_value_obj("network_graph")
         file_type = inputs.get_value_data('file_type')
         name = inputs.get_value_data('file_name')
+        path_name = inputs.get_value_data('file_path')
 
         network_data: NetworkGraph = edges.data
+
+        if path_name != None:
+            file_path = str(path_name + name)
+        else:
+            file_path = os.path.join(os.path.abspath(''), name)
 
         G = network_data.as_networkx_graph()
 
         if file_type == "graphml":
-            nx.write_graphml(G, str(name + '.graphml'))
+            nx.write_graphml(G, str(file_path + '.graphml'))
 
         if file_type == "gml":
-            nx.write_gml(G, str(name + '.gml'), stringizer=str)
+            nx.write_gml(G, str(file_path + '.gml'), stringizer=str)
 
         if file_type == "gexf":
-            nx.write_gexf(G, str(name + '.gexf'))
+            nx.write_gexf(G, str(file_path + '.gexf'))
 
         if file_type == "adj_list":
-            nx.write_adjlist(G, str(name + '.adjlist'))
+            nx.write_adjlist(G, str(file_path + '.adjlist'))
         
         if file_type == "multi_adj_list":
-            nx.write_multiline_adjlist(G, str(name +'.adjlist'))
+            nx.write_multiline_adjlist(G, str(file_path +'.adjlist'))
 
         if file_type == "pajek":
-            nx.write_pajek(G, str(name + '.pajek'))
+            nx.write_pajek(G, str(file_path + '.pajek'))
 
         if file_type == "network_text":
-            nx.write_network_text(G, str(name + '.txt'))
+            nx.write_network_text(G, str(file_path + '.txt'))
+
+        
 
         outputs.set_value("information", "information")
