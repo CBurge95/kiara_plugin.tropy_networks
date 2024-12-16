@@ -67,7 +67,7 @@ class Export_Networks(KiaraModule):
             nx.write_graphml(G, str(name + '.graphml'))
 
         if file_type == "gml":
-            nx.write_gml(G, 'graph.gml')
+            nx.write_gml(G, str(name + '.gml'), label="id")
 
         if file_type == "gexf":
             nx.write_gexf(G, str(name + '.gexf'))
@@ -76,10 +76,10 @@ class Export_Networks(KiaraModule):
             nx.write_adjlist(G, str(name + '.adjlist'))
         
         if file_type == "multi_adj_list":
-            nx.write_multiline_adjlist(G, '.adjlist')
+            nx.write_multiline_adjlist(G, str(name +'.adjlist'))
 
         if file_type == "pajek":
-            nx.write_pajek(G, str(name + '.net'))
+            nx.write_pajek(G, str(name + '.pajek'))
 
         if file_type == "network_text":
             nx.write_network_text(G, str(name + '.txt'))
