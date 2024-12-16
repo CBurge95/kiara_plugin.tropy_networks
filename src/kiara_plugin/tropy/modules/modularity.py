@@ -18,7 +18,7 @@ class ModularityCommunity(KiaraModule):
     Modularity community is a density-based community detection method that investigates the structural composition of a network.
     """
 
-    _module_type_name = "tropy.compute.modularity_group"
+    _module_type_name = "compute.modularity_group"
 
     def create_inputs_schema(
         self,

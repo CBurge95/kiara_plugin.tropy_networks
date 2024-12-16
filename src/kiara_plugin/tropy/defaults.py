@@ -30,3 +30,13 @@ ALLOWED_PARALLEL_STRINGS = [
     "minimum",
     "maximum",
 ]
+
+ALLOWED_EXPORT_TYPES_STRINGS = [
+    "graphml",
+    "gml",
+    "gexf",
+    "adj_list",
+    "multi_adj_list",
+    "pajek",
+    "network_text"
+]

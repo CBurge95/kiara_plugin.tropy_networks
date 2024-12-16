@@ -14,7 +14,7 @@ KIARA_METADATA = {
 class CutPointsList(KiaraModule):
     """Finds and returns the largest component in a network. If there is only one component, this will return a warning message."""
 
-    _module_type_name = "create.largest_component"
+    _module_type_name = "extract.largest_component"
 
     def create_inputs_schema(self):
         return {
