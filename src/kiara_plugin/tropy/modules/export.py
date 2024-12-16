@@ -67,7 +67,7 @@ class Export_Networks(KiaraModule):
             nx.write_graphml(G, str(name + '.graphml'))
 
         if file_type == "gml":
-            nx.write_gml(G, str(name + '.gml'), label="id")
+            nx.write_gml(G, str(name + '.gml'), stringizer=str)
 
         if file_type == "gexf":
             nx.write_gexf(G, str(name + '.gexf'))
