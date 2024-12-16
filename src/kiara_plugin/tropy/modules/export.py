@@ -98,4 +98,4 @@ class Export_Networks(KiaraModule):
 
         
 
-        outputs.set_value("information", "information")
+        outputs.set_value("information", file_path)
