@@ -1,5 +1,6 @@
 import os
 
+from kiara.api import KiaraModule
 from kiara.models.values.value import ValueMap
 from kiara_plugin.tropy.models import NetworkGraph
 from kiara.modules.included_core_modules.export_as import DataExportModule
@@ -12,7 +13,7 @@ KIARA_METADATA = {
     "description": "Kiara modules for: network_analysis",
 }
 
-class Export_Networks(DataExportModule):
+class Export_Networks(KiaraModule):
     """Offers options for exporting a kiara network graph into other formats for use outside of kiara. 
     Currently available formats are:
     - graphml
@@ -35,49 +36,42 @@ class Export_Networks(DataExportModule):
                 "type": "string",
                 "type_config": {"allowed_strings": ALLOWED_EXPORT_TYPES_STRINGS},
                 "doc": "The file type to be exported to."
-            }
-        }
-
-    def create_outputs_schema(self):
-        return {
-            "centrality_network": {
-                "type": "network_graph",
-                "doc": "Updated network data with degree ranking assigned as a node attribute.",
             },
+            "file_name": {
+                "type": "string",
+                "doc": "Name for the new file."
+            }
         }
 
     def process(self, inputs: ValueMap, outputs: ValueMap):
 
         import networkx as nx
 
-        target_path = os.path.join(os.path.abspath(''), f"{name}.graphml")
-
         edges = inputs.get_value_obj("network_graph")
         file_type = inputs.get_value_data('file_type')
+        name = inputs.get_value_data('file_name')
 
         network_data: NetworkGraph = edges.data
 
         G = network_data.as_networkx_graph()
 
         if file_type == "graphml":
-            nx.write_graphml(G, target_path)
+            nx.write_graphml(G, str(name + '.graphml'))
 
         if file_type == "gml":
-            nx.write_gml(G, target_path)
+            nx.write_gml(G, str(name + '.gml'))
 
         if file_type == "gexf":
-            nx.write_gexf(G, target_path)
+            nx.write_gexf(G, str(name + '.gexf'))
 
         if file_type == "adj_list":
-            nx.write_adjlist(G, target_path)
+            nx.write_adjlist(G, str(name + '.adjlist'))
         
         if file_type == "multi_adj_list":
-            nx.write_multiline_adjlist(G, target_path)
+            nx.write_multiline_adjlist(G, '.adjlist')
 
         if file_type == "pajek":
-            nx.write_pajek(G, target_path)
+            nx.write_pajek(G, str(name + '.net'))
 
         if file_type == "network_text":
-            nx.write_network_text(G. target_path)
-
-        return {"files": target_path}
+            nx.write_network_text(G, str(name + '.txt'))
