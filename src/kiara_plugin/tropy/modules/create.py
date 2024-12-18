@@ -34,6 +34,7 @@ KIARA_METADATA = {
     "authors": [
         {"name": "Lena Jaskov", "email": "helena.jaskov@uni.lu"},
         {"name": "Markus Binsteiner", "email": "markus@frkl.io"},
+        {"name": "Caitlin Burge", "email":"caitlinburge@hotmail.co.uk"}
     ],
     "description": "Modules to create/export network data.",
 }
