@@ -273,9 +273,8 @@ class AssembleGraphFromTablesModule(KiaraModule):
                 edges = set([(item[0], item[1]) for item in [list(items.values()) for items in table.to_pylist()]])
                 edge_list = []
                 for item in edges:
-                    if (item[0], item[1]) not in edge_list:
-                        if (item[1], item[0]) not in edge_list:
-                            edge_list.append([item[0], item[1]])
+                    if [item[0],item[1]] not in edge_list:
+                        edge_list.append([item[1],item[0]])
                 edges_table_data = [[item[0] for item in edge_list], [item[1] for item in edge_list]]
                 data_arrays = [pa.array(col) for col in edges_table_data]
                 column_names = [edges_source_column_name, edges_target_column_name]
