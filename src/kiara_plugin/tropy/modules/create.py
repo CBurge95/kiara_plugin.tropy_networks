@@ -48,7 +48,7 @@ class CreateNetworkDataModuleConfig(CreateFromModuleConfig):
 
 class CreateNetworkDataModule(CreateFromModule):
 
-    _module_type_name = "assemble.network_graph.from.file"
+    _module_type_name = "create.network_graph.from.file"
     _config_cls = CreateNetworkDataModuleConfig
 
     def create__network_graph__from__file(self, source_value: Value) -> Any:
@@ -258,6 +258,10 @@ class AssembleGraphFromTablesModule(KiaraModule):
         is_weighted = inputs.get_value_data("is_weighted")
         weight_column = inputs.get_value_data("weight_column")
         merge_strategy = inputs.get_value_data("parallel_edge_strategy")
+
+        if is_weighted == False and graph_type_str == 'directed' or 'undirected':
+            edges_table = edges_table.arrow_table
+            edges_table = edges_table.select([edges_source_column_name, edges_target_column_name])
         
         if is_weighted == True:
             if not weight_column and not merge_strategy:
@@ -266,13 +270,21 @@ class AssembleGraphFromTablesModule(KiaraModule):
             if not weight_column and merge_strategy != "sum":
                 raise KiaraProcessingException("If a weight column has not been selected, this merge strategy will weight all edges as 1. Choose either a weight column or an unweighted graph.")
             
-            #if merge_strategy is not None and graph_type_str == "directed_multi" or "undirected_multi":
-            #    raise KiaraProcessingException("Merging parallel edges is not possible in a multigraph. Choose either directed or undirected graphs if you wish to merge edges.")
+            if merge_strategy != None and graph_type_str == "directed_multi" or "undirected_multi":
+                raise KiaraProcessingException("Merging parallel edges is not possible in a multigraph. Choose either directed or undirected graphs if you wish to merge edges.")
             
             if weight_column == None and merge_strategy == "sum":
                 table = edges_table.arrow_table
                 table = table.select([edges_source_column_name, edges_target_column_name])
-                assign_weight = [(item[0], item[1]) for item in [list(items.values()) for items in table.to_pylist()]]
+                if graph_type_str == 'directed':
+                    assign_weight = [(item[0], item[1]) for item in [list(items.values()) for items in table.to_pylist()]]
+                if graph_type_str == 'undirected':
+                    assign_weight = []
+                    for item in [list(items.values() for items in table.to_pylist())]:
+                        if (item[1], item[0]) not in assign_weight:
+                            assign_weight.append(item[0], item[1])
+                        if (item[1], item[0]) in assign_weight:
+                            assign_weight.append(item[1], item[0])
                 weight_dict = collections.Counter(assign_weight)
                 weight_dict_table = [[k[0], k[1], v] for k,v in weight_dict.items()]
 
@@ -283,20 +295,50 @@ class AssembleGraphFromTablesModule(KiaraModule):
                 )
 
                 table = (edges_table.arrow_table).select([edges_source_column_name, edges_target_column_name, weight_column])
+
+                if merge_strategy == None:
+                    assign_weight = [list(items.values()) for items in table.to_pylist()]
+                    if graph_type_str == 'directed_multi' or 'undirected_multi':
+                        weight_dict_table = [item for item in assign_weight]
+                    assign_set = set(assign_weight)
+                    if len(assign_weight) > len(assign_set) and graph_type_str == 'directed' or 'undirected':
+                        raise KiaraProcessingException(
+                            f"Edges table contains parallel edges. If you do not wish to merge these edges, please select a multigraph."
+                        )
+                    if len(assign_weight) == len(assign_set) and graph_type_str == 'directed':
+                        weight_dict_table = [item for item in assign_weight]
+                    if len(assign_weight) == len(assign_set) and graph_type_str == 'undirected':
+                        assign_undirected = []
+                        for item in assign_set:
+                            if [item[0],[1]] not in assign_undirected:
+                                if [item[1],item[0]] not in assign_undirected:
+                                    assign_undirected.append([item[0],item[1]])
+                        if len(assign_set) > len(assign_undirected):
+                            raise KiaraProcessingException(
+                                f"Edges table contains reciprocal edges. If you do not wish to merge these edges, please select a directed graph or multigraph."
+                            )
+                        if len(assign_set) == len(assign_undirected):
+                            weight_dict_table = [item for item in assign_weight]
                 
                 assign_weight = [list(items.values()) for items in table.to_pylist()]
                 def parallel_sum():
                     empty = {}
-                    for item in assign_weight:
-                        if (item[0], item[1]) not in empty.keys():
-                            empty[(item[0], item[1])] = 0
-                        if (item[0], item[1]) in empty.keys():
-                            empty[(item[0], item[1])] += int(item[2])
+                    if graph_type_str == 'directed':
+                        for item in assign_weight:
+                            if (item[0], item[1]) not in empty.keys():
+                                empty[(item[0], item[1])] == int(item[2])
+                            if (item[0], item[1]) in empty.keys():
+                                empty[(item[0], item[1])] += int(item[2])
+                    if graph_type_str == 'undirected':
+                        for item in assign_weight:
+                            if (item[0], item[1]) not in empty.keys():
+                                if (item[1], item[0]) not in empty.keys():
+                                    empty[(item[0], item[1])] == int(item[2])
+                                if (item[1], item[0]) in empty.keys():
+                                    empty[(item[1], item[0])] += int(item[2])
+                            if (item[0], item[1]) in empty.keys():
+                                empty[(item[0], item[1])] += int(item[2])
                     return empty
-
-                if merge_strategy is None:
-                    weight_dict_table = table.append_column('weight', table.column(weight_column))
-                    weight_dict_table = [list(items.values()) for items in weight_dict_table.to_pylist()]
 
                 if merge_strategy == "sum":
                     empty = parallel_sum()
@@ -304,7 +346,15 @@ class AssembleGraphFromTablesModule(KiaraModule):
 
                 if merge_strategy == "mean":
                     empty = parallel_sum()
-                    edge_count = [(item[0], item[1]) for item in assign_weight]
+                    if graph_type_str == 'directed':
+                        edge_count = [(item[0], item[1]) for item in assign_weight]
+                    if graph_type_str == 'undirected':
+                        edge_count = []
+                        for item in assign_weight:
+                            if (item[1], item[0]) not in edge_count:
+                                edge_count.append(item[0], item[1])
+                            if (item[1], item[0]) in edge_count:
+                                assign_weight.append(item[1], item[0])
                     weight_dict = collections.Counter(edge_count)
                     mean_dict = {}
                     for a, b in weight_dict.items():
@@ -315,38 +365,66 @@ class AssembleGraphFromTablesModule(KiaraModule):
 
                 if merge_strategy == "minimum":
                     empty = {}
-                    for item in assign_weight:
-                        if (item[0], item[1]) not in empty.keys():
-                            empty[(item[0], item[1])] = int(item[2])
-                        if (item[0], item[1]) in empty.keys():
-                            if empty[(item[0], item[1])] >= int(item[2]):
+                    if graph_type_str == 'directed':
+                        for item in assign_weight:
+                            if (item[0], item[1]) not in empty.keys():
                                 empty[(item[0], item[1])] = int(item[2])
-                            else:
-                                continue
+                            if (item[0], item[1]) in empty.keys():
+                                if empty[(item[0], item[1])] >= int(item[2]):
+                                    empty[(item[0], item[1])] = int(item[2])
+                                else:
+                                    continue
+                    if graph_type_str == 'undirected':
+                        for item in assign_weight:
+                            if (item[0], item[1]) not in empty.keys():
+                                if (item[1], item[0]) not in empty.keys():
+                                    empty[(item[0], item[1])] = int(item[2])
+                                if (item[1], item[0]) in empty.keys():
+                                    if empty[(item[1], item[0])] >= int(item[2]):
+                                        empty[(item[1], item[0])] = int(item[2])
+                                    else:
+                                        continue
+                            if (item[0], item[1]) in empty.keys():
+                                if empty[(item[0], item[1])] >= int(item[2]):
+                                    empty[(item[0], item[1])] = int(item[2])
+                                else:
+                                    continue
                     weight_dict_table = [[k[0], k[1], v] for k,v in empty.items()]
 
                 if merge_strategy == "maximum":
                     empty = {}
-                    for item in assign_weight:
-                        if (item[0], item[1]) not in empty.keys():
-                            empty[(item[0], item[1])] = int(item[2])
-                        if (item[0], item[1]) in empty.keys():
-                            if empty[(item[0], item[1])] <= int(item[2]):
+                    if graph_type_str == 'directed':
+                        for item in assign_weight:
+                            if (item[0], item[1]) not in empty.keys():
                                 empty[(item[0], item[1])] = int(item[2])
-                            else:
-                                continue
+                            if (item[0], item[1]) in empty.keys():
+                                if empty[(item[0], item[1])] <= int(item[2]):
+                                    empty[(item[0], item[1])] = int(item[2])
+                                else:
+                                    continue
+                    if graph_type_str == 'undirected':
+                        for item in assign_weight:
+                            if (item[0], item[1]) not in empty.keys():
+                                if (item[1], item[0]) not in empty.keys():
+                                    empty[(item[0], item[1])] = int(item[2])
+                                if (item[1], item[0]) in empty.keys():
+                                    if empty[(item[1], item[0])] <= int(item[2]):
+                                        empty[(item[1], item[0])] = int(item[2])
+                                    else:
+                                        continue
+                            if (item[0], item[1]) in empty.keys():
+                                if empty[(item[0], item[1])] <= int(item[2]):
+                                    empty[(item[0], item[1])] = int(item[2])
+                                else:
+                                    continue
                     weight_dict_table = [[k[0], k[1], v] for k,v in empty.items()]
 
-            weight_dict_data =  [[item[0] for item in weight_dict_table], [item[1] for item in weight_dict_table], [item[-1] for item in weight_dict_table]]
+            weight_dict_data =  [[item[0] for item in weight_dict_table], [item[1] for item in weight_dict_table], [item[2] for item in weight_dict_table]]
             data_arrays = [pa.array(col) for col in weight_dict_data]
             column_names = [edges_source_column_name, edges_target_column_name, 'weight']
             weight_dict_table = pa.Table.from_arrays(data_arrays, names=column_names)
-            if weight_column == 'weight':
-                table = (edges_table.arrow_table).join(weight_dict_table, [edges_source_column_name, edges_target_column_name], left_suffix="_original")
-            else:
-                table = (edges_table.arrow_table).join(weight_dict_table, [edges_source_column_name, edges_target_column_name])
-
-            edges_table: KiaraTable = table
+            
+            edges_table: KiaraTable = weight_dict_table
 
         network_graph = NetworkGraph.create_from_tables(
             graph_type=graph_type,
