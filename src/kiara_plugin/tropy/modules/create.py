@@ -340,7 +340,7 @@ class AssembleGraphFromTablesModule(KiaraModule):
                         if len(assign_set) == len(assign_undirected):
                             weight_dict_table = [item for item in assign_weight]
                 
-                assign_weight = [list(items.values()) for items in table.to_pylist()]
+                assign_weight = [(item[0],item[1],item[2]) for item in [list(items.values()) for items in table.to_pylist()]]
                 def parallel_sum():
                     empty = {}
                     if graph_type_str == 'directed':
