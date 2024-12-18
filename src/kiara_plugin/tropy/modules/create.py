@@ -346,14 +346,14 @@ class AssembleGraphFromTablesModule(KiaraModule):
                     if graph_type_str == 'directed':
                         for item in assign_weight:
                             if (item[0], item[1]) not in empty.keys():
-                                empty[(item[0], item[1])] = int(item[2])
+                                empty[(item[0], item[1])] = 0
                             if (item[0], item[1]) in empty.keys():
                                 empty[(item[0], item[1])] += int(item[2])
                     if graph_type_str == 'undirected':
                         for item in assign_weight:
                             if (item[0], item[1]) not in empty.keys():
                                 if (item[1], item[0]) not in empty.keys():
-                                    empty[(item[0], item[1])] = int(item[2])
+                                    empty[(item[0], item[1])] = 0
                                 if (item[1], item[0]) in empty.keys():
                                     empty[(item[1], item[0])] += int(item[2])
                             if (item[0], item[1]) in empty.keys():
@@ -388,7 +388,7 @@ class AssembleGraphFromTablesModule(KiaraModule):
                     if graph_type_str == 'directed':
                         for item in assign_weight:
                             if (item[0], item[1]) not in empty.keys():
-                                empty[(item[0], item[1])] = int(item[2])
+                                empty[(item[0], item[1])] = 0
                             if (item[0], item[1]) in empty.keys():
                                 if empty[(item[0], item[1])] >= int(item[2]):
                                     empty[(item[0], item[1])] = int(item[2])
@@ -398,7 +398,7 @@ class AssembleGraphFromTablesModule(KiaraModule):
                         for item in assign_weight:
                             if (item[0], item[1]) not in empty.keys():
                                 if (item[1], item[0]) not in empty.keys():
-                                    empty[(item[0], item[1])] = int(item[2])
+                                    empty[(item[0], item[1])] = 0
                                 if (item[1], item[0]) in empty.keys():
                                     if empty[(item[1], item[0])] >= int(item[2]):
                                         empty[(item[1], item[0])] = int(item[2])
@@ -416,7 +416,7 @@ class AssembleGraphFromTablesModule(KiaraModule):
                     if graph_type_str == 'directed':
                         for item in assign_weight:
                             if (item[0], item[1]) not in empty.keys():
-                                empty[(item[0], item[1])] = int(item[2])
+                                empty[(item[0], item[1])] = 0
                             if (item[0], item[1]) in empty.keys():
                                 if empty[(item[0], item[1])] <= int(item[2]):
                                     empty[(item[0], item[1])] = int(item[2])
@@ -426,7 +426,7 @@ class AssembleGraphFromTablesModule(KiaraModule):
                         for item in assign_weight:
                             if (item[0], item[1]) not in empty.keys():
                                 if (item[1], item[0]) not in empty.keys():
-                                    empty[(item[0], item[1])] = int(item[2])
+                                    empty[(item[0], item[1])] = 0
                                 if (item[1], item[0]) in empty.keys():
                                     if empty[(item[1], item[0])] <= int(item[2]):
                                         empty[(item[1], item[0])] = int(item[2])
