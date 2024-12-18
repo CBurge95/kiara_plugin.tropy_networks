@@ -270,7 +270,7 @@ class AssembleGraphFromTablesModule(KiaraModule):
             
             if graph_type_str == 'undirected':
                 table = (edges_table.arrow_table).select([edges_source_column_name, edges_target_column_name])
-                edges = [list(items.values()) for items in table.to_pylist()]
+                edges = [(item[0], item[1]) for item in [list(items.values()) for items in table.to_pylist()]]
                 edge_list = set(edges)
                 for item in edge_list:
                     if (item[0], item[1]) not in edge_list:
