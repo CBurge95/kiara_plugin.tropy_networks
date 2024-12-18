@@ -280,6 +280,11 @@ class AssembleGraphFromTablesModule(KiaraModule):
                 column_names = [edges_source_column_name, edges_target_column_name]
                 edges_table = pa.Table.from_arrays(data_arrays, names=column_names)
 
+            if graph_type_str == 'directed_multi':
+                edges_table: KiaraTable = edges_table
+            
+            if graph_type_str == 'undirected_multi':
+                edges_table: KiaraTable = edges_table
 
         if is_weighted == True:
             if not weight_column and not merge_strategy:
@@ -451,7 +456,17 @@ class AssembleGraphFromTablesModule(KiaraModule):
             column_names = [edges_source_column_name, edges_target_column_name, 'weight']
             weight_dict_table = pa.Table.from_arrays(data_arrays, names=column_names)
             
-            edges_table: KiaraTable = weight_dict_table
+            if graph_type_str == 'directed_multi':
+                edges_table: KiaraTable = edges_table
+            
+            if graph_type_str == 'undirected_multi':
+                edges_table: KiaraTable = edges_table
+
+            if graph_type_str == 'directed':
+                edges_table: KiaraTable = weight_dict_table
+
+            if graph_type_str == 'undirected':
+                edges_table: KiaraTable = weight_dict_table
 
         network_graph = NetworkGraph.create_from_tables(
             graph_type=graph_type,
