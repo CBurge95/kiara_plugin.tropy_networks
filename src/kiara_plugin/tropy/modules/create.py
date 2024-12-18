@@ -317,7 +317,7 @@ class AssembleGraphFromTablesModule(KiaraModule):
                 table = (edges_table.arrow_table).select([edges_source_column_name, edges_target_column_name, weight_column])
 
                 if merge_strategy == None:
-                    assign_weight = [list(items.values()) for items in table.to_pylist()]
+                    assign_weight = [(item[0],item[1],item[2]) for item in [list(items.values()) for items in table.to_pylist()]]
                     if graph_type_str == 'directed_multi' or 'undirected_multi':
                         weight_dict_table = [item for item in assign_weight]
                     assign_set = set(assign_weight)
