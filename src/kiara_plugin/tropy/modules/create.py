@@ -327,13 +327,20 @@ class AssembleGraphFromTablesModule(KiaraModule):
 
                 if merge_strategy == None:
                     assign_weight = [(item[0],item[1],item[2]) for item in [list(items.values()) for items in table.to_pylist()]]
-                    if graph_type_str == 'directed_multi' or 'undirected_multi':
+                    if graph_type_str == 'directed_multi':
+                        weight_dict_table = [item for item in assign_weight]
+                    if graph_type_str == 'undirected_multi':
                         weight_dict_table = [item for item in assign_weight]
                     assign_set = set(assign_weight)
-                    if len(assign_weight) > len(assign_set) and graph_type_str == 'directed' or 'undirected':
-                        raise KiaraProcessingException(
-                            f"Edges table contains parallel edges. If you do not wish to merge these edges, please select a multigraph."
-                        )
+                    if len(assign_weight) > len(assign_set):
+                        if graph_type_str == 'directed':
+                            raise KiaraProcessingException(
+                                f"Edges table contains parallel edges. If you do not wish to merge these edges, please select a multigraph."
+                            )
+                        if graph_type_str == 'undirected':
+                            raise KiaraProcessingException(
+                                f"Edges table contains parallel edges. If you do not wish to merge these edges, please select a multigraph."
+                            )
                     if len(assign_weight) == len(assign_set) and graph_type_str == 'directed':
                         weight_dict_table = [item for item in assign_weight]
                     if len(assign_weight) == len(assign_set) and graph_type_str == 'undirected':
