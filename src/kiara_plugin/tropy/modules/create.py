@@ -377,6 +377,7 @@ class AssembleGraphFromTablesModule(KiaraModule):
                             if (item[1], item[0]) in edge_count:
                                 if item[0] != item[1]:
                                     assign_weight.append([item[1], item[0]])
+                        edge_count = [(item[0], item[1]) for item in edge_count]
                     weight_dict = collections.Counter(edge_count)
                     mean_dict = {}
                     for a, b in weight_dict.items():
