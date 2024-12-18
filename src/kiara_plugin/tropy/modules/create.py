@@ -355,7 +355,8 @@ class AssembleGraphFromTablesModule(KiaraModule):
                                 if (item[1], item[0]) not in empty.keys():
                                     empty[(item[0], item[1])] = 0
                                 if (item[1], item[0]) in empty.keys():
-                                    empty[(item[1], item[0])] += int(item[2])
+                                    if item[0] != item[1]:
+                                        empty[(item[1], item[0])] += int(item[2])
                             if (item[0], item[1]) in empty.keys():
                                 empty[(item[0], item[1])] += int(item[2])
                     return empty
