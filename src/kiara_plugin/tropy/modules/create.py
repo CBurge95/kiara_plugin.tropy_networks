@@ -345,8 +345,8 @@ class AssembleGraphFromTablesModule(KiaraModule):
                     empty = {}
                     if graph_type_str == 'directed':
                         for item in assign_weight:
-                            if (item[0], item[1]) not in empty.keys():
-                                empty[(item[0], item[1])] == int(item[2])
+                            if [item[0], item[1]] not in empty.keys():
+                                empty[[item[0], item[1]]] == int(item[2])
                             if (item[0], item[1]) in empty.keys():
                                 empty[(item[0], item[1])] += int(item[2])
                     if graph_type_str == 'undirected':
