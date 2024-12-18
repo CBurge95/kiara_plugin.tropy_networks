@@ -293,6 +293,11 @@ class AssembleGraphFromTablesModule(KiaraModule):
                         f"Merging parallel edges is not possible in a multigraph. Choose either directed or undirected graphs if you wish to merge edges."
                         )
             
+            if not merge_strategy and graph_type_str == 'undirected_multi':
+                    raise KiaraProcessingException(
+                        f"Merging parallel edges is not possible in a multigraph. Choose either directed or undirected graphs if you wish to merge edges."
+                        )
+            
             if weight_column == None and merge_strategy == "sum":
                 table = (edges_table.arrow_table).select([edges_source_column_name, edges_target_column_name])
                 if graph_type_str == 'directed':
