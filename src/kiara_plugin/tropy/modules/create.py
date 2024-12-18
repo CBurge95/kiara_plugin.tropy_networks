@@ -259,10 +259,28 @@ class AssembleGraphFromTablesModule(KiaraModule):
         weight_column = inputs.get_value_data("weight_column")
         merge_strategy = inputs.get_value_data("parallel_edge_strategy")
 
-        if is_weighted == False and graph_type_str == 'directed' or 'undirected':
-            edges_table = edges_table.arrow_table
-            edges_table = edges_table.select([edges_source_column_name, edges_target_column_name])
-        
+        if is_weighted == False:
+            if graph_type_str == 'directed':
+                table = (edges_table.arrow_table).select([edges_source_column_name, edges_target_column_name])
+                edges = [(item[0], item[1]) for item in [list(items.values()) for items in table.to_pylist()]]
+                edges_table_data = [[item[0] for item in set(edges)], [item[1] for item in set(edges)]]
+                data_arrays = [pa.array(col) for col in edges_table_data]
+                column_names = [edges_source_column_name, edges_target_column_name]
+                edges_table = pa.Table.from_arrays(data_arrays, names=column_names)
+            
+            if graph_type_str == 'undirected':
+                table = (edges_table.arrow_table).select([edges_source_column_name, edges_target_column_name])
+                edges = []
+                for item in set([list(items.values()) for items in table.to_pylist()]):
+                    if (item[0], item[1]) not in edges:
+                        if (item[1], item[0]) not in edges:
+                            edges.append([item[0], item[1]])
+                edges_table_data = [[item[0] for item in set(edges)], [item[1] for item in set(edges)]]
+                data_arrays = [pa.array(col) for col in edges_table_data]
+                column_names = [edges_source_column_name, edges_target_column_name]
+                edges_table = pa.Table.from_arrays(data_arrays, names=column_names)
+
+
         if is_weighted == True:
             if not weight_column and not merge_strategy:
                 raise KiaraProcessingException("Graph is weighted but no weights have been selected. Choose either a weight column or a parallel edge strategy.")
@@ -270,12 +288,14 @@ class AssembleGraphFromTablesModule(KiaraModule):
             if not weight_column and merge_strategy != "sum":
                 raise KiaraProcessingException("If a weight column has not been selected, this merge strategy will weight all edges as 1. Choose either a weight column or an unweighted graph.")
             
-            #if merge_strategy != None and graph_type_str == "directed_multi" or "undirected_multi":
-             #   raise KiaraProcessingException("Merging parallel edges is not possible in a multigraph. Choose either directed or undirected graphs if you wish to merge edges.")
+            if merge_strategy is not None: 
+                if graph_type_str == "directed_multi" or "undirected_multi":
+                    raise KiaraProcessingException(
+                        f"Merging parallel edges is not possible in a multigraph. Choose either directed or undirected graphs if you wish to merge edges."
+                        )
             
             if weight_column == None and merge_strategy == "sum":
-                table = edges_table.arrow_table
-                table = table.select([edges_source_column_name, edges_target_column_name])
+                table = (edges_table.arrow_table).select([edges_source_column_name, edges_target_column_name])
                 if graph_type_str == 'directed':
                     assign_weight = [(item[0], item[1]) for item in [list(items.values()) for items in table.to_pylist()]]
                 if graph_type_str == 'undirected':
