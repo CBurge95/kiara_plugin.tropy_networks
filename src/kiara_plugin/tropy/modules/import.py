@@ -3,7 +3,6 @@ import os
 from kiara.api import KiaraModule
 from kiara.models.values.value import ValueMap
 from kiara_plugin.tropy.models import NetworkGraph
-from kiara_plugin.tabular.models import KiaraTable
 from kiara_plugin.tropy.defaults import (
     ALLOWED_EXPORT_TYPES_STRINGS,
     DEFAULT_SOURCE_COLUMN_NAME,
