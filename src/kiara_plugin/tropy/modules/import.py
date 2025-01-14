@@ -1,0 +1,86 @@
+import os
+
+from kiara.api import KiaraModule
+from kiara.models.values.value import ValueMap
+from kiara_plugin.tropy.models import NetworkGraph
+from kiara_plugin.tropy.defaults import ALLOWED_EXPORT_TYPES_STRINGS
+
+KIARA_METADATA = {
+    "authors": [
+        {"name": "Lena Jaskov", "email": "helena.jaskov@uni.lu"},
+        {"name": "Caitlin Burge", "email": "caitlinburge@hotmail.co.uk"}
+    ],
+    "description": "Kiara modules for: network_analysis",
+}
+
+class Import_Networks(KiaraModule):
+    """Offers options for importing network graph formats into kiara for use with kiara network analysis modules, using networkx. 
+    Currently available formats are:
+    - graphml ('graphml')
+    - gml ('gml')
+    - gexf ('gexf')
+    - adjaceny list ('adj_list')
+    - multiline adjacency list ('multi_adj_list')
+    - pajek ('pajek')
+    """
+    
+    _module_type_name = 'import.network_graph'
+
+    def create_inputs_schema(self):
+        return {
+            "path": {
+                "type": "string",
+                "doc": "The path to the local file.",
+                "optional": False,
+            },
+            "file_type": {
+                "type": "string",
+                "type_config": {"allowed_strings": ALLOWED_EXPORT_TYPES_STRINGS},
+                "doc": "The file type being imported."
+            },
+            "label":{
+                "type": "string",
+                "doc": "The node attribute that holds the 'label' information. Set this input to 'id' when there is no 'label' attribute. (GML file only)",
+                "optional": True,
+                "default": "label",
+            }
+        }
+    
+    def create_outputs_schema(self):
+        return {
+            "network_graph": {
+                "type": "network_graph",
+                "doc": "The kiara network graph."
+            }
+        }
+    
+    def process(self, inputs: ValueMap, outputs: ValueMap):        
+        import networkx as nx
+        file_path = inputs.get_value_data('path')
+        file_type = inputs.get_value_data('file_type')
+        label = inputs.get_value_data('label')
+
+        if file_type == "graphml":
+            G = nx.read_graphml(file_path)
+
+        if file_type == "gml":
+            if label is None:
+                G = nx.read_gml(file_path)
+            else:
+                G = nx.read_gml(file_path, label=label)
+
+        if file_type == "gexf":
+            G = nx.read_gexf(file_path)
+
+        if file_type == "adj_list":
+            G = nx.read_adjlist(file_path)
+        
+        if file_type == "multi_adj_list":
+            G = nx.read_multiline_adjlist(G, file_path)
+
+        if file_type == "pajek":
+            G = nx.write_pajek(G, file_path)  
+
+        network_graph = NetworkGraph.create_from_networkx_graph(G)
+        
+        outputs.set_values(network_graph=network_graph)

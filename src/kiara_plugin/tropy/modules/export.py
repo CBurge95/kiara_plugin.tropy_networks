@@ -13,15 +13,15 @@ KIARA_METADATA = {
 }
 
 class Export_Networks(KiaraModule):
-    """Offers options for exporting a kiara network graph into other formats for use outside of kiara. 
+    """Offers options for exporting a kiara network graph into other formats for use outside of kiara, using networkx. 
     Currently available formats are:
-    - graphml
-    - gml
-    - gexf
-    - adjaceny list
-    - multiline adjacency list
-    - pajek
-    - network text
+    - graphml ('graphml')
+    - gml ('gml')
+    - gexf ('gexf')
+    - adjaceny list ('adj_list')
+    - multiline adjacency list ('multi_adj_list')
+    - pajek ('pajek')
+    - network text ('network_text')
     """
 
     _module_type_name = "export.network_graph"
