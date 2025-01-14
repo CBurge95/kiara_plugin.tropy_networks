@@ -3,7 +3,13 @@ import os
 from kiara.api import KiaraModule
 from kiara.models.values.value import ValueMap
 from kiara_plugin.tropy.models import NetworkGraph
-from kiara_plugin.tropy.defaults import ALLOWED_EXPORT_TYPES_STRINGS
+from kiara_plugin.tabular.models import KiaraTable
+from kiara_plugin.tropy.defaults import (
+    ALLOWED_EXPORT_TYPES_STRINGS,
+    DEFAULT_SOURCE_COLUMN_NAME,
+    DEFAULT_TARGET_COLUMN_NAME,
+    GraphType
+)
 
 KIARA_METADATA = {
     "authors": [
@@ -56,6 +62,8 @@ class Import_Networks(KiaraModule):
     
     def process(self, inputs: ValueMap, outputs: ValueMap):        
         import networkx as nx
+        import pandas as pd
+
         file_path = inputs.get_value_data('path')
         file_type = inputs.get_value_data('file_type')
         label = inputs.get_value_data('label')
@@ -76,11 +84,33 @@ class Import_Networks(KiaraModule):
             G = nx.read_adjlist(file_path)
         
         if file_type == "multi_adj_list":
-            G = nx.read_multiline_adjlist(G, file_path)
+            G = nx.read_multiline_adjlist(file_path)
 
         if file_type == "pajek":
-            G = nx.write_pajek(G, file_path)  
+            G = nx.read_pajek(file_path)  
 
-        network_graph = NetworkGraph.create_from_networkx_graph(G)
+        if isinstance(G, nx.MultiDiGraph):
+            graph_type = GraphType.DIRECTED_MULTI
+        elif isinstance(G, nx.MultiGraph):
+            graph_type = GraphType.UNDIRECTED_MULTI
+        elif isinstance(G, nx.DiGraph):
+            graph_type = GraphType.DIRECTED
+        elif isinstance(G, nx.Graph):
+            graph_type = GraphType.UNDIRECTED
+
+        edges_table = nx.to_pandas_edgelist(G)
+        edges_table: KiaraTable = edges_table
+
+
+
+        edge_table_data = [[item[0] for item in G.edges()], [item[1] for item in G.edges()]]
+        data_arrays = [pa.array(col) for col in edge_table_data]
+        edge_table_cols = ['Source', 'Target']
+        edge_table = pa.Table.from_arrays(data_arrays, names=edge_table_cols)
+
+        network_graph = NetworkGraph.create_from_tables(
+            graph_type=graph_type,
+            edges_table=edges_table
+        )
         
-        outputs.set_values(network_graph=network_graph)
+        outputs.set_values("network_graph",network_graph)
