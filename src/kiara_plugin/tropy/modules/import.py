@@ -62,6 +62,7 @@ class Import_Networks(KiaraModule):
     def process(self, inputs: ValueMap, outputs: ValueMap):        
         import networkx as nx
         import pandas as pd
+        import pyarrow as pa
 
         file_path = inputs.get_value_data('path')
         file_type = inputs.get_value_data('file_type')
