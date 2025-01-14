@@ -5,8 +5,6 @@ from kiara.models.values.value import ValueMap
 from kiara_plugin.tropy.models import NetworkGraph
 from kiara_plugin.tropy.defaults import (
     ALLOWED_EXPORT_TYPES_STRINGS,
-    DEFAULT_SOURCE_COLUMN_NAME,
-    DEFAULT_TARGET_COLUMN_NAME,
     GraphType
 )
 
@@ -99,15 +97,7 @@ class Import_Networks(KiaraModule):
         elif isinstance(G, nx.Graph):
             graph_type = GraphType.UNDIRECTED
 
-        edges_table = nx.to_pandas_edgelist(G)
-        edges_table: KiaraTable = edges_table
-
-
-
-        edge_table_data = [[item[0] for item in G.edges()], [item[1] for item in G.edges()]]
-        data_arrays = [pa.array(col) for col in edge_table_data]
-        edge_table_cols = ['Source', 'Target']
-        edge_table = pa.Table.from_arrays(data_arrays, names=edge_table_cols)
+        edges_table: KiaraTable = nx.to_pandas_edgelist(G)
 
         network_graph = NetworkGraph.create_from_tables(
             graph_type=graph_type,
