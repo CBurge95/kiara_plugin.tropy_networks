@@ -60,6 +60,7 @@ class Import_Networks(KiaraModule):
         }
     
     def process(self, inputs: ValueMap, outputs: ValueMap):        
+        
         import networkx as nx
         import pandas as pd
         import pyarrow as pa
@@ -113,4 +114,4 @@ class Import_Networks(KiaraModule):
             edges_table=edges_table
         )
         
-        outputs.set_values("network_graph",network_graph)
+        outputs.set_values(network_graph = network_graph)
