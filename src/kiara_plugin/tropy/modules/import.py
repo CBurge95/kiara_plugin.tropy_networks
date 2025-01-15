@@ -46,6 +46,11 @@ class Import_Networks(KiaraModule):
                 "doc": "The node attribute that holds the 'label' information. Set this input to 'id' when there is no 'label' attribute. (GML file only)",
                 "optional": True,
                 "default": "label",
+            },
+            "weight_column": {
+                "type": "string",
+                "doc": "The name of the weight column if not already 'weight'. This will be renamed as 'weight' during the import.",
+                "optional": True
             }
         }
     
@@ -66,6 +71,7 @@ class Import_Networks(KiaraModule):
         file_path = inputs.get_value_data('path')
         file_type = inputs.get_value_data('file_type')
         label = inputs.get_value_data('label')
+        weight = inputs.get_value_data('weight_column')
 
         if file_type == "graphml":
             G = nx.read_graphml(file_path)
@@ -97,7 +103,12 @@ class Import_Networks(KiaraModule):
         elif isinstance(G, nx.Graph):
             graph_type = GraphType.UNDIRECTED
 
-        edges_table: KiaraTable = nx.to_pandas_edgelist(G)
+        edges_table = nx.to_pandas_edgelist(G)
+
+        if weight != None:
+            edges_table.rename(columns={weight:'weight'})
+        
+        edges_table: KiaraTable = edges_table
 
         network_graph = NetworkGraph.create_from_tables(
             graph_type=graph_type,
