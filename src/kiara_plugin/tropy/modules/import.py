@@ -106,7 +106,7 @@ class Import_Networks(KiaraModule):
         edges_table = nx.to_pandas_edgelist(G)
 
         if weight != None:
-            edges_table.rename(columns={weight:'weight'})
+            edges_table = edges_table.rename(columns={weight:'weight'})
         
         edges_table: KiaraTable = edges_table
 
