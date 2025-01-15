@@ -27,7 +27,7 @@ class Import_Networks(KiaraModule):
     - pajek ('pajek')
     """
     
-    _module_type_name = 'import.network_graph'
+    _module_type_name = 'import.network_graph.from.file'
 
     def create_inputs_schema(self):
         return {
