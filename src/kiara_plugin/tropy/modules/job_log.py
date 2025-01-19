@@ -92,4 +92,6 @@ class JobLog(KiaraModule):
                         else:
                             JOB_LOG.append(f"{name}: \n {kiara._api.render_value(value=id, target_format="string").rendered[:1000]}")
 
+        JOB_LOG = [item for item in JOB_LOG] 
+
         outputs.set_values(job_log=JOB_LOG)
