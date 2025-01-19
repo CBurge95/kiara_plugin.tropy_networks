@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from kiara.api import KiaraModule, ValueMapSchema
 from kiara.models.values.value import ValueMap
+from kiara.interfaces.python_api import BaseAPI
 
 KIARA_METADATA = {
     "authors": [
