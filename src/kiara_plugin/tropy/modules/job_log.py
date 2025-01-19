@@ -65,33 +65,33 @@ class JobLog(KiaraModule):
         JOB_LOG = []
         for job_id, job in jobs.items():
             if job.is_internal == False:
-                JOB_LOG.append(f"\nJob '{job.module_type}', submitted: {job.job_submitted}")
-                JOB_LOG.append(f"'Comments:' {kiara.get_job_comment(job_id)}")
-                JOB_LOG.append(f"Runtime: {job.runtime_details.runtime} seconds")
-                JOB_LOG.append("INPUTS")
+                job_log = []
+                job_log.append(f"\nJob '{job.module_type}', submitted: {job.job_submitted}")
+                job_log.append(f"'Comments:' {kiara.get_job_comment(job_id)}")
+                job_log.append(f"Runtime: {job.runtime_details.runtime} seconds")
+                job_log.append("INPUTS")
                 for name, id in job.inputs.items():
                     if kiara.get_value(id).value_status.value != 'none':
                         if len(kiara._api.render_value(value=id, target_format="string").rendered) < 10:
-                                JOB_LOG.append(f"{name}: \n {kiara._api.render_value(value=id, target_format="string").rendered[:1000]}")     
+                                job_log.append(f"{name}: \n {kiara._api.render_value(value=id, target_format="string").rendered[:1000]}")     
                         else:       
                             str_id = str(id)
                             if str_id in alias_dict.keys():
-                                JOB_LOG.append(f"{name}: \n {alias_dict[str_id]}")                  
+                                job_log.append(f"{name}: \n {alias_dict[str_id]}")                  
                             else:
-                                JOB_LOG.append(f"{name}: \n {kiara._api.render_value(value=id, target_format="string").rendered[:1000]}")
+                                job_log.append(f"{name}: \n {kiara._api.render_value(value=id, target_format="string").rendered[:1000]}")
                     else:
-                        JOB_LOG.append(f"{name}: {kiara.get_value(id).value_status.value}")
-                JOB_LOG.append("OUTPUTS")
+                        job_log.append(f"{name}: {kiara.get_value(id).value_status.value}")
+                job_log.append("OUTPUTS")
                 for name, id in job.outputs.items():
                     if len(kiara._api.render_value(value=id, target_format="string").rendered) < 500:
-                                JOB_LOG.append(f"{name}: \n {kiara._api.render_value(value=id, target_format="string").rendered[:1000]}")   
+                                job_log.append(f"{name}: \n {kiara._api.render_value(value=id, target_format="string").rendered[:1000]}")   
                     else:
                         str_id = str(id)
                         if str_id in alias_dict.keys():
-                            JOB_LOG.append(f"{name}: \n {alias_dict[str_id]}")
+                            job_log.append(f"{name}: \n {alias_dict[str_id]}")
                         else:
-                            JOB_LOG.append(f"{name}: \n {kiara._api.render_value(value=id, target_format="string").rendered[:1000]}")
-
-        JOB_LOG = [item for item in JOB_LOG] 
+                            job_log.append(f"{name}: \n {kiara._api.render_value(value=id, target_format="string").rendered[:1000]}")
+                JOB_LOG.append(job_log)
 
         outputs.set_values(job_log=JOB_LOG)
