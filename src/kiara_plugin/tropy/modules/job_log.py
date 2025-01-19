@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 from kiara.api import KiaraModule, ValueMapSchema, KiaraAPI
 from kiara.models.values.value import ValueMap
+from kiara.exceptions import KiaraProcessingException
+import pandas as pd
+
 
 KIARA_METADATA = {
     "authors": [
@@ -57,6 +60,18 @@ class JobLog(KiaraModule):
     def process(self, inputs: ValueMap, outputs: ValueMap):
         kiara = KiaraAPI.instance()
 
+        aliases = inputs.get_value_obj('aliases')
+        max_char = inputs.get_value_obj('max_characters')
+        export = inputs.get_value_obj('export_type')
+
+        EXPORT_TYPES = ['txt', 'csv']
+        if export not in EXPORT_TYPES:
+             raise KiaraProcessingException('Export type not supported. Please select "txt" or "csv"')
+        
+        if export == 'csv':
+            job_table = pd.DataFrame(columns=['Module Name', 'Comments', 'Time Submitted', 'Runtime', 'Inputs', 'Outputs'])
+            x = 0
+
         jobs = kiara.list_all_job_records()
         alias_dict = {}
         for values, schema in kiara.list_aliases().items():
@@ -69,28 +84,45 @@ class JobLog(KiaraModule):
                 job_log = (job_log + (f"\nComments: {kiara.get_job_comment(job_id)}"))
                 job_log = (job_log + (f"\nRuntime: {job.runtime_details.runtime} seconds"))
                 job_log = (job_log + "\nINPUTS")
+                inputs = str()
                 for name, id in job.inputs.items():
                     if kiara.get_value(id).value_status.value != 'none':
-                        if len(kiara._api.render_value(value=id, target_format="string").rendered) < 10:
-                                job_log = (job_log + (f"\n{name}: \n {kiara._api.render_value(value=id, target_format="string").rendered[:1000]}"))     
-                        else:       
-                            str_id = str(id)
-                            if str_id in alias_dict.keys():
-                                job_log = (job_log + (f"\n{name}: \n {alias_dict[str_id]}"))                 
-                            else:
-                                job_log = (job_log + (f"\n{name}: \n {kiara._api.render_value(value=id, target_format="string").rendered[:1000]}"))
+                        if len(kiara._api.render_value(value=id, target_format="string").rendered) < 500:
+                                inputs = (inputs + (f"\n{name}: \n {kiara._api.render_value(value=id, target_format="string").rendered[:max_char]}"))     
+                        else:
+                            if aliases == True:       
+                                str_id = str(id)
+                                if str_id in alias_dict.keys():
+                                    inputs = (inputs + (f"\n{name}: \n {alias_dict[str_id]}"))            
+                                else:
+                                    inputs = (inputs + (f"\n{name}: \n {kiara._api.render_value(value=id, target_format="string").rendered[:1000]}"))
                     else:
-                        job_log = (job_log + (f"\n{name}: {kiara.get_value(id).value_status.value}"))
-                job_log = (job_log + "\n OUTPUTS")
+                        inputs = (inputs + (f"\n{name}: {kiara.get_value(id).value_status.value}"))
+                job_log = (job_log + inputs + "\n OUTPUTS")
+                outputs = str()
                 for name, id in job.outputs.items():
                     if len(kiara._api.render_value(value=id, target_format="string").rendered) < 500:
-                                job_log = (job_log + (f"\n{name}: \n {kiara._api.render_value(value=id, target_format="string").rendered[:1000]}"))
+                                outputs = (outputs + (f"\n{name}: \n {kiara._api.render_value(value=id, target_format="string").rendered[:1000]}"))
                     else:
-                        str_id = str(id)
-                        if str_id in alias_dict.keys():
-                            job_log = (job_log + (f"\n{name}: \n {alias_dict[str_id]}"))
-                        else:
-                            job_log = (job_log + (f"\n{name}: \n {kiara._api.render_value(value=id, target_format="string").rendered[:1000]}"))
+                        if aliases == True:
+                            str_id = str(id)
+                            if str_id in alias_dict.keys():
+                                outputs = (outputs + (f"\n{name}: \n {alias_dict[str_id]}"))
+                            else:
+                                outputs = (outputs + (f"\n{name}: \n {kiara._api.render_value(value=id, target_format="string").rendered[:1000]}"))
+                job_log = (job_log + outputs)
                 JOB_LOG = (JOB_LOG + job_log)
+                if export == 'csv':
+                    job_table.loc[x] = [f'{job.module_type}'] + [kiara.get_job_comment(job_id)] + [job.job_submitted] + [f"{job.runtime_details.runtime} seconds"] + [inputs] + [outputs]
+                    x = x + 1
+
+
+        if export == 'txt':
+            f = open("job_log.txt", 'w')
+            f.write(JOB_LOG)
+            f.close
+
+        if export == 'csv':
+            job_table.to_csv('job_log.csv', index=False)
 
         outputs.set_values(job_log=JOB_LOG)
