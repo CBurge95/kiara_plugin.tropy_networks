@@ -87,28 +87,28 @@ class JobLog(KiaraModule):
                 for name, id in job.inputs.items():
                     if kiara.get_value(id).value_status.value != 'none':
                         if len(kiara._api.render_value(value=id, target_format="string").rendered) < 500:
-                                _inputs = (_inputs + (f"\n{name}: \n {kiara._api.render_value(value=id, target_format="string").rendered[:max_char]}"))     
+                            _inputs = (_inputs + (f"\n{name}: \n {kiara._api.render_value(value=id, target_format="string").rendered[:max_char]}"))     
                         else:
                             if aliases == True:       
                                 str_id = str(id)
                                 if str_id in alias_dict.keys():
                                     _inputs = (_inputs + (f"\n{name}: \n {alias_dict[str_id]}"))            
                                 else:
-                                    _inputs = (_inputs + (f"\n{name}: \n {kiara._api.render_value(value=id, target_format="string").rendered[:1000]}"))
+                                    _inputs = (_inputs + (f"\n{name}: \n {kiara._api.render_value(value=id, target_format="string").rendered[:max_char]}"))
                     else:
                         _inputs = (_inputs + (f"\n{name}: {kiara.get_value(id).value_status.value}"))
                 _job_log = (_job_log + _inputs + "\n OUTPUTS")
                 _outputs = str()
                 for name, id in job.outputs.items():
                     if len(kiara._api.render_value(value=id, target_format="string").rendered) < 500:
-                                _outputs = (_outputs + (f"\n{name}: \n {kiara._api.render_value(value=id, target_format="string").rendered[:1000]}"))
+                        _outputs = (_outputs + (f"\n{name}: \n {kiara._api.render_value(value=id, target_format="string").rendered[:max_char]}"))
                     else:
                         if aliases == True:
                             str_id = str(id)
                             if str_id in alias_dict.keys():
                                 _outputs = (_outputs + (f"\n{name}: \n {alias_dict[str_id]}"))
                             else:
-                                _outputs = (_outputs + (f"\n{name}: \n {kiara._api.render_value(value=id, target_format="string").rendered[:1000]}"))
+                                _outputs = (_outputs + (f"\n{name}: \n {kiara._api.render_value(value=id, target_format="string").rendered[:max_char]}"))
                 _job_log = (_job_log + _outputs)
                 JOB_LOG = (JOB_LOG + _job_log)
                 if export == 'csv':
