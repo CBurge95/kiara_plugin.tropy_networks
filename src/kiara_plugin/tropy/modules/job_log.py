@@ -109,6 +109,8 @@ class JobLog(KiaraModule):
                                 _outputs = (_outputs + (f"\n{name}: \n {alias_dict[str_id]}"))
                             else:
                                 _outputs = (_outputs + (f"\n{name}: \n {kiara._api.render_value(value=id, target_format="string").rendered[:max_char]}"))
+                        else:
+                                _outputs = (_outputs + (f"\n{name}: \n {kiara._api.render_value(value=id, target_format="string").rendered[:max_char]}"))
                 _job_log = (_job_log + _outputs)
                 JOB_LOG = (JOB_LOG + _job_log)
                 if export == 'csv':
