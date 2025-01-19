@@ -79,10 +79,10 @@ class JobLog(KiaraModule):
         JOB_LOG = str()
         for job_id, job in jobs.items():
             if job.is_internal == False:
-                job_log = (f"\nJob '{job.module_type}', submitted: {job.job_submitted}")
-                job_log = (job_log + (f"\nComments: {kiara.get_job_comment(job_id)}"))
-                job_log = (job_log + (f"\nRuntime: {job.runtime_details.runtime} seconds"))
-                job_log = (job_log + "\nINPUTS")
+                _job_log = (f"\nJob '{job.module_type}', submitted: {job.job_submitted}")
+                _job_log = (_job_log + (f"\nComments: {kiara.get_job_comment(job_id)}"))
+                _job_log = (_job_log + (f"\nRuntime: {job.runtime_details.runtime} seconds"))
+                _job_log = (_job_log + "\nINPUTS")
                 inputs = str()
                 for name, id in job.inputs.items():
                     if kiara.get_value(id).value_status.value != 'none':
@@ -97,7 +97,7 @@ class JobLog(KiaraModule):
                                     inputs = (inputs + (f"\n{name}: \n {kiara._api.render_value(value=id, target_format="string").rendered[:1000]}"))
                     else:
                         inputs = (inputs + (f"\n{name}: {kiara.get_value(id).value_status.value}"))
-                job_log = (job_log + inputs + "\n OUTPUTS")
+                _job_log = (_job_log + inputs + "\n OUTPUTS")
                 outputs = str()
                 for name, id in job.outputs.items():
                     if len(kiara._api.render_value(value=id, target_format="string").rendered) < 500:
@@ -109,8 +109,8 @@ class JobLog(KiaraModule):
                                 outputs = (outputs + (f"\n{name}: \n {alias_dict[str_id]}"))
                             else:
                                 outputs = (outputs + (f"\n{name}: \n {kiara._api.render_value(value=id, target_format="string").rendered[:1000]}"))
-                job_log = (job_log + outputs)
-                JOB_LOG = (JOB_LOG + job_log)
+                _job_log = (_job_log + outputs)
+                JOB_LOG = (JOB_LOG + _job_log)
                 if export == 'csv':
                     job_table.loc[x] = [f'{job.module_type}'] + [kiara.get_job_comment(job_id)] + [job.job_submitted] + [f"{job.runtime_details.runtime} seconds"] + [inputs] + [outputs]
                     x = x + 1
