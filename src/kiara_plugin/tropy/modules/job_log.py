@@ -73,6 +73,9 @@ class JobLog(KiaraModule):
         for values, schema in kiara.list_aliases().items():
             alias_dict[str(kiara.get_value(schema).value_id)] = values
 
+        if type(max_char) != int:
+            max_char = None
+
         JOB_LOG = str()
         for job_id, job in jobs.items():
             if job.is_internal == False:
