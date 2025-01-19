@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
-from kiara.api import KiaraModule, ValueMapSchema
+from kiara.api import KiaraModule, ValueMapSchema, KiaraAPI
 from kiara.models.values.value import ValueMap
-from kiara.interfaces.python_api.base_api import BaseAPI
 
 KIARA_METADATA = {
     "authors": [
@@ -56,7 +55,7 @@ class JobLog(KiaraModule):
         }
 
     def process(self, inputs: ValueMap, outputs: ValueMap):
-        kiara = self
+        kiara = KiaraAPI.instance()
 
         jobs = kiara.list_all_job_records()
         alias_dict = {}
