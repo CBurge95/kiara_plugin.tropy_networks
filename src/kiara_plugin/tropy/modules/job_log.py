@@ -98,7 +98,7 @@ class JobLog(KiaraModule):
                                         _inputs = (_inputs + (f"\n{name}: \n {kiara._api.render_value(value=id, target_format="string").rendered[:max_char]}"))
                         else:
                             _inputs = (_inputs + (f"\n{name}: {kiara.get_value(id).value_status.value}"))
-                    _job_log = (_job_log + _inputs + "\n OUTPUTS")
+                    _job_log = (_job_log + _inputs + "\nOUTPUTS")
                     _outputs = str()
                     for name, id in job.outputs.items():
                         if len(kiara._api.render_value(value=id, target_format="string").rendered) < 500:
