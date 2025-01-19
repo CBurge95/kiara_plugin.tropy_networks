@@ -65,8 +65,9 @@ class JobLog(KiaraModule):
         export = inputs.get_value_obj('export_type')
 
         EXPORT_TYPES = ['txt', 'csv']
-        if export not in EXPORT_TYPES:
-             raise KiaraProcessingException('Export type not supported. Please select "txt" or "csv"')
+        if export != None:
+            if export not in EXPORT_TYPES:
+                raise KiaraProcessingException('Export type not supported. Please select "txt" or "csv"')
         
         if export == 'csv':
             job_table = pd.DataFrame(columns=['Module Name', 'Comments', 'Time Submitted', 'Runtime', 'Inputs', 'Outputs'])
