@@ -79,7 +79,7 @@ class JobLog(KiaraModule):
         JOB_LOG = str()
         for job_id, job in jobs.items():
             if job.is_internal == False:
-                _job_log = (f"\nJob '{job.module_type}', submitted: {job.job_submitted}")
+                _job_log = (f"\n\nJob '{job.module_type}', submitted: {job.job_submitted}")
                 _job_log = (_job_log + (f"\nComments: {kiara.get_job_comment(job_id)}"))
                 _job_log = (_job_log + (f"\nRuntime: {job.runtime_details.runtime} seconds"))
                 _job_log = (_job_log + "\nINPUTS")
