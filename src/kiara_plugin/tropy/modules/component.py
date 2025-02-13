@@ -11,7 +11,7 @@ KIARA_METADATA = {
 }
 
 
-class CutPointsList(KiaraModule):
+class Components(KiaraModule):
     """Finds and returns the largest component in a network. If there is only one component, this will return a warning message."""
 
     _module_type_name = "extract.largest_component"
