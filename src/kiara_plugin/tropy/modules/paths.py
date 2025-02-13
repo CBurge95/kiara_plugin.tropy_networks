@@ -42,7 +42,7 @@ class AveragePath(KiaraModule):
         network_data: NetworkGraph = edges.data
 
         G = network_data.as_networkx_graph()
-        if len(nx.connected_components(G.to_undirected())) > 1:
+        if len(sorted(nx.connected_components(G.to_undirected()), key=len, reverse=True)) > 1:
             raise KiaraProcessingException(
                     f"Graph contains more than one component. Please choose either the largest component or a graph with only one component."
             )
