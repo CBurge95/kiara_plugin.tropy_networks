@@ -1,16 +1,32 @@
-[![PyPI status](https://img.shields.io/pypi/status/kiara_plugin.tropy.svg)](https://pypi.python.org/pypi/kiara_plugin.tropy/)
-[![PyPI version](https://img.shields.io/pypi/v/kiara_plugin.tropy.svg)](https://pypi.python.org/pypi/kiara_plugin.tropy/)
-[![PyPI pyversions](https://img.shields.io/pypi/pyversions/kiara_plugin.tropy.svg)](https://pypi.python.org/pypi/kiara_plugin.tropy/)
-[![Build Status](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Factions-badge.atrox.dev%2FDHARPA-Project%2Fkiara%2Fbadge%3Fref%3Ddevelop&style=flat)](https://actions-badge.atrox.dev/DHARPA-Project/kiara_plugin.tropy/goto?ref=develop)
-[![Coverage Status](https://coveralls.io/repos/github/DHARPA-Project/kiara_plugin.tropy/badge.svg?branch=develop)](https://coveralls.io/github/DHARPA-Project/kiara_plugin.tropy?branch=develop)
+
+<h2>Network Analysis</h2>
+
+Network Analysis offers a computational and quantitative means to examine and explore relational objects, with proxies to measure structural roles and concepts such as power and influence. Doing so digitally - and at scale - also allows us to consider these kinds of questions with large amounts of material or documents that was not  heretofore manageable with qualitative or manual approaches.
+
+These modules use <a href="https://networkx.org">NetworkX</a> as their base for core or fundamental analytical elements of network analysis. As such there are some limited functionalties (and cannot handle multiplex or knowledge graphs), but we recommend that researchers interested in these write their own modules for use in <i>kiara</i>.
+
+The modules in this plugin allow users to:
+- Create graphs (directed; undirected; multidirected; multiundirected - all weighted or unweighted, with multiple weighting options);
+- Preview information about possible graph options, including number of edges and nodes, self-loops, isolates, and components;
+- Extract the largest component;
+- Calculate centralities (degree, betweenness, eigenvector, and closeness);
+- Calculate modularity groups;
+- Create a list of cut-points;
+- Export graphs from <i>kiara</i> into graphml, gml, gexf, adjacency list, multiline adjacency list, pajek, or network text;
+- Import graphs from graphml, gml, gexf, adjacency list, multiline adjacency list, or pajek into <i>kiara</i>
+
+[![PyPI status](https://img.shields.io/pypi/status/kiara_plugin.networkx_analysis.svg)](https://pypi.python.org/pypi/kiara_plugin.networkx_analysis/)
+[![PyPI version](https://img.shields.io/pypi/v/kiara_plugin.networkx_analysis.svg)](https://pypi.python.org/pypi/kiara_plugin.networkx_analysis/)
+[![PyPI pyversions](https://img.shields.io/pypi/pyversions/kiara_plugin.networkx_analysis.svg)](https://pypi.python.org/pypi/kiara_plugin.networkx_analysis/)
+[![Build Status](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Factions-badge.atrox.dev%2FDHARPA-Project%2Fkiara%2Fbadge%3Fref%3Ddevelop&style=flat)](https://actions-badge.atrox.dev/DHARPA-Project/kiara_plugin.networkx_analysis/goto?ref=develop)
+[![Coverage Status](https://coveralls.io/repos/github/DHARPA-Project/kiara_plugin.networkx_analysis/badge.svg?branch=develop)](https://coveralls.io/github/DHARPA-Project/kiara_plugin.networkx_analysis?branch=develop)
 [![Code style](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black)
 
-# [**kiara**](https://dharpa.org/kiara.documentation) plugin: (tropy)
+# [**kiara**](https://dharpa.org/kiara.documentation) plugin: (networkx_analysis)
 
-Modules and utils for the tropy mini-app.
 
- - Documentation: [https://DHARPA-Project.github.io/kiara_plugin.tropy](https://DHARPA-Project.github.io/kiara_plugin.tropy)
- - Code: [https://github.com/DHARPA-Project/kiara_plugin.tropy](https://github.com/DHARPA-Project/kiara_plugin.tropy)
+ - Documentation: [https://DHARPA-Project.github.io/kiara_plugin.networkx_analysis](https://DHARPA-Project.github.io/kiara_plugin.networkx_analysis)
+ - Code: [https://github.com/DHARPA-Project/kiara_plugin.networkx_analysis](https://github.com/DHARPA-Project/kiara_plugin.networkx_analysis)
  - `kiara`: [https://dharpa.org/kiara.documentation](https://dharpa.org/kiara.documentation)
 
 ## Description
