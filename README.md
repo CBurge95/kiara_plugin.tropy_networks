@@ -16,6 +16,8 @@ The modules in this plugin allow users to:
 - Export graphs from <i>kiara</i> into graphml, gml, gexf, adjacency list, multiline adjacency list, pajek, or network text;
 - Import graphs from graphml, gml, gexf, adjacency list, multiline adjacency list, or pajek into <i>kiara</i>
 
+
+
 [![PyPI status](https://img.shields.io/pypi/status/kiara_plugin.networkx_analysis.svg)](https://pypi.python.org/pypi/kiara_plugin.networkx_analysis/)
 [![PyPI version](https://img.shields.io/pypi/v/kiara_plugin.networkx_analysis.svg)](https://pypi.python.org/pypi/kiara_plugin.networkx_analysis/)
 [![PyPI pyversions](https://img.shields.io/pypi/pyversions/kiara_plugin.networkx_analysis.svg)](https://pypi.python.org/pypi/kiara_plugin.networkx_analysis/)
