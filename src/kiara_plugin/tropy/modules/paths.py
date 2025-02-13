@@ -52,6 +52,6 @@ class AveragePath(KiaraModule):
         else:
             weights = False
         
-        path = nx.average_shortest_path_length(G.to_undirected(), weighted=weights)
+        path = nx.average_shortest_path_length(G.to_undirected(), weight=weights)
 
         outputs.set_values(path=path)
