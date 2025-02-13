@@ -9,6 +9,7 @@ The modules in this plugin allow users to:
 - Create graphs (directed; undirected; multidirected; multiundirected - all weighted or unweighted, with multiple weighting options);
 - Preview information about possible graph options, including number of edges and nodes, self-loops, isolates, and components;
 - Extract the largest component;
+- Calculate diameter and average shortest path length for the largest component or a connected graph;
 - Calculate centralities (degree, betweenness, eigenvector, and closeness);
 - Calculate modularity groups;
 - Create a list of cut-points;
