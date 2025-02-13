@@ -61,7 +61,7 @@ class AveragePath(KiaraModule):
 class Diameter(KiaraModule):
     """Finds and returns the diameter of the component entered. If there are more than one component present, this will return an error message."""
 
-    _module_type_name = "calculate.average_path"
+    _module_type_name = "calculate.diameter"
 
     def create_inputs_schema(self):
         return {
