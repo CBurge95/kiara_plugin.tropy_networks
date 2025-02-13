@@ -37,7 +37,7 @@ class AveragePath(KiaraModule):
         import networkx as nx
         from kiara_plugin.tropy.models import NetworkGraph
 
-        edges = inputs.get_value_obj("network_graph")
+        edges = inputs.get_value_obj("network_component")
 
         network_data: NetworkGraph = edges.data
 
