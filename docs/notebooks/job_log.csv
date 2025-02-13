@@ -1,5 +1,0 @@
-job_id,module_name,time_submitted,comment,runtime,module_config
-431fa4c2-a044-4b93-a315-e54ee85755aa,download.file,2025-01-23 15:39:48.462755+00:00,importing journal nodes,0.085227,"{'constants': {}, 'defaults': {}, 'result_file_name': None, 'attach_metadata': True}"
-490b75e3-6755-4403-bfd9-a19989ddadbd,create.table,2025-01-23 15:39:48.657577+00:00,,0.124732,"{'constants': {}, 'defaults': {}, 'source_type': 'file', 'target_type': 'table', 'ignore_errors': False}"
-342955c8-90ca-4f7c-892e-07071d396000,query.table,2025-01-23 15:39:48.940532+00:00,,0.155754,"{'constants': {}, 'defaults': {}, 'query': None, 'relation_name': 'data'}"
-d47a5a91-ddfa-489b-a4b5-f5793753915d,query.table,2025-01-23 15:39:49.174867+00:00,,0.01207,"{'constants': {}, 'defaults': {}, 'query': None, 'relation_name': 'data'}"
